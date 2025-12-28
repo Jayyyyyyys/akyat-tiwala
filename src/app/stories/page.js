@@ -26,7 +26,7 @@ export default function KwentongBundok() {
         <div className="min-h-screen bg-slate-50">
             {/* NAVBAR */}
             <nav className="bg-emerald-900 text-white p-4 flex justify-between items-center shadow-md">
-                <a href="/" className="font-black text-xl tracking-tighter uppercase italic text-orange-400 underline underline-offset-4 decoration-white">Akyat Tiwala</a>
+                <a href="/" className="font-black text-xl tracking-tighter uppercase italic text-orange-400">AKYAT TIWALA</a>
                 <a href="/stories/upload" className="bg-orange-500 text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest">
                     + Share Story
                 </a>

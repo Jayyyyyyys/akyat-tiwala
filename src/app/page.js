@@ -60,7 +60,7 @@ export default function Home() {
   <div className="space-x-4 text-xs font-bold uppercase">
     <a href="/" className="hover:text-orange-400">Plan</a>
     {/* MAKE SURE THIS LINK IS CORRECT */}
-    <a href="/stories" className="hover:text-orange-400">Kwentong Bundok</a>
+    <a href="/stories" className="hover:text-orange-400">Kwentong Bundok</a> 
     <a href="/portal" className="bg-orange-500 px-3 py-2 rounded">Guide Portal</a>
   </div>
 </nav>
