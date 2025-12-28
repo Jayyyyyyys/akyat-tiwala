@@ -70,11 +70,13 @@ export default function UploadStory() {
                             <option>Mt. Batulao</option>
                             <option>Nasugbu Trilogy</option>
                             <option>Mt. Talamitam</option>
+                            <option>Mt. Apayang</option>
+                            <option>Mt. Lantik</option>
                         </select>
                     </div>
                     <div>
                         <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Caption</label>
-                        <textarea required value={caption} onChange={(e) => setCaption(e.target.value)} className="w-full border p-3 rounded-xl h-24" placeholder="How was the trail?"></textarea>
+                        <textarea required value={caption} onChange={(e) => setCaption(e.target.value)} className="w-full border p-3 rounded-xl h-24" placeholder="Kumusta ang akyat mo?"></textarea>
                     </div>
                     <div>
                         <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Photo</label>
