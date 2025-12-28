@@ -55,14 +55,15 @@ export default function Home() {
         <title>Akyat Tiwala | Nasugbu DIY Hiking</title>
       </Head>
 
-      {/* NAVBAR */}
-      <nav className="sticky top-0 bg-emerald-900 text-white p-4 flex justify-between items-center z-50 shadow-md">
-        <h1 className="font-black text-xl tracking-tighter uppercase italic">Akyat Tiwala</h1>
-        <div className="space-x-4 text-xs font-bold uppercase">
-          <a href="#plan" className="hover:text-orange-400">Plan</a>
-          <a href="/portal" className="bg-orange-500 px-3 py-2 rounded">Guide Portal</a>
-        </div>
-      </nav>
+<nav className="sticky top-0 bg-emerald-900 text-white p-4 flex justify-between items-center z-50 shadow-md">
+  <h1 className="font-black text-xl tracking-tighter uppercase italic">Akyat Tiwala</h1>
+  <div className="space-x-4 text-xs font-bold uppercase">
+    <a href="/" className="hover:text-orange-400">Plan</a>
+    {/* MAKE SURE THIS LINK IS CORRECT */}
+    <a href="/stories" className="hover:text-orange-400">Kwentong Bundok</a>
+    <a href="/portal" className="bg-orange-500 px-3 py-2 rounded">Guide Portal</a>
+  </div>
+</nav>
 
       {/* HERO SECTION */}
       <header className="bg-emerald-800 text-white py-16 px-6 text-center">
