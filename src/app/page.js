@@ -21,28 +21,28 @@ export default function Home() {
     trilogy: {
       name: "Nasugbu Trilogy",
       difficulty: "5/9",
-      regFee: 140, 
+      regFee: 450, 
       guideFee: 2100,
       desc: "Full challenge: Mt. Lantik + Mt. Talamitam + Mt. Apayang in one day."
     },
     talamitam: {
-      name: "Mt. Talamitam (Only)",
+      name: "Mt. Talamitam",
       difficulty: "4/9",
-      regFee: 140,
+      regFee: 150,
       guideFee: 700,
       desc: "The 'Sister Mountain' of Batulao. Vast grasslands and very beginner-friendly."
     },
     apayang: {
-      name: "Mt. Apayang (Only)",
+      name: "Mt. Apayang",
       difficulty: "3/9",
-      regFee: 140,
+      regFee: 150,
       guideFee: 700,
       desc: "A slightly more technical peak next to Talamitam with a great view of the range."
     },
     lantik: {
-      name: "Mt. Lantik (Only)",
+      name: "Mt. Lantik",
       difficulty: "3/9",
-      regFee: 140,
+      regFee: 150,
       guideFee: 700,
       desc: "A shorter, forested trail. Great if you want to avoid the direct heat of the sun."
     }
