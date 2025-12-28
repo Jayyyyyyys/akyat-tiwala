@@ -13,9 +13,9 @@ export default function Home() {
   const mountains = {
     batulao: {
       name: "Mt. Batulao",
-      difficulty: "3/9",
-      regFee: 140,
-      guideFee: 800,
+      difficulty: "4/9",
+      regFee: 220,
+      guideFee: 1200,
       desc: "The classic Nasugbu hike. Famous for its 'Mini Pulag' ridges and cool breeze."
     },
     trilogy: {
@@ -27,7 +27,7 @@ export default function Home() {
     },
     talamitam: {
       name: "Mt. Talamitam (Only)",
-      difficulty: "2/9",
+      difficulty: "4/9",
       regFee: 140,
       guideFee: 700,
       desc: "The 'Sister Mountain' of Batulao. Vast grasslands and very beginner-friendly."
@@ -41,7 +41,7 @@ export default function Home() {
     },
     lantik: {
       name: "Mt. Lantik (Only)",
-      difficulty: "2/9",
+      difficulty: "3/9",
       regFee: 140,
       guideFee: 700,
       desc: "A shorter, forested trail. Great if you want to avoid the direct heat of the sun."
@@ -148,7 +148,7 @@ export default function Home() {
                 </div>
                 
                 <input 
-                  type="range" min="1" max="10" value={pax} 
+                  type="range" min="1" max="5" value={pax} 
                   onChange={(e) => setPax(e.target.value)}
                   className="w-full h-4 bg-slate-100 rounded-full appearance-none cursor-pointer accent-orange-500 mb-10 px-4"
                 />
@@ -169,7 +169,7 @@ export default function Home() {
                   disabled={loading}
                   className="w-full bg-emerald-900 text-white font-black py-6 rounded-[2.5rem] text-xl shadow-xl hover:bg-orange-500 transition-all uppercase italic active:scale-95 flex items-center justify-center gap-3 border-b-4 border-emerald-950"
                 >
-                  {loading ? 'Hahanapin si Kuya...' : '⛰️ Pick Your Kuya!'}
+                  {loading ? 'Hahanapin si Kuya...' : '⛰️ Pick Your Kuya/Ate!'}
                 </button>
               </div>
             </div>
