@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
+import { supabase } from '@/lib/supabase'; // Import the Supabase connection
 
 export default function Home() {
   const [selectedMountain, setSelectedMountain] = useState(null);
   const [pax, setPax] = useState(1);
+  const [guides, setGuides] = useState([]); // List of found guides
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Updated Data for Nasugbu Mountains (2025 Estimates)
+  // Updated Data for Nasugbu Mountains
   const mountains = {
     batulao: {
       name: "Mt. Batulao",
@@ -49,21 +52,48 @@ export default function Home() {
   const currentMount = mountains[selectedMountain];
   const totalCost = currentMount ? (currentMount.regFee * pax) + currentMount.guideFee : 0;
 
+  // NEW FUNCTION: Fetch Kuyas from Database
+  async function findKuyas() {
+    setLoading(true);
+    setGuides([]); // Reset list
+    
+    // Fetch from Supabase
+    // .contains checks if the selected mountain name exists in the 'mountains_covered' array column
+    const { data, error } = await supabase
+      .from('guides')
+      .select('*')
+      .contains('mountains_covered', [currentMount.name]);
+
+    if (error) {
+      alert("Error: " + error.message);
+    } else {
+      setGuides(data);
+      if (data.length === 0) {
+        alert("Sa ngayon, wala pang verified kuyas sa trail na ito. Check back soon!");
+      } else {
+        // Auto-scroll to guides list
+        setTimeout(() => {
+          document.getElementById('kuya-section')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+    setLoading(false);
+  }
+
   return (
-    <div className="min-h-screen font-sans bg-slate-50">
+    <div className="min-h-screen font-sans bg-slate-50 pb-20">
       <Head>
         <title>Akyat Tiwala | Nasugbu DIY Hiking</title>
       </Head>
 
-<nav className="sticky top-0 bg-emerald-900 text-white p-4 flex justify-between items-center z-50 shadow-md">
-  <h1 className="font-black text-xl tracking-tighter uppercase italic">Akyat Tiwala</h1>
-  <div className="space-x-4 text-xs font-bold uppercase">
-    <a href="/" className="hover:text-orange-400">Plan</a>
-    {/* MAKE SURE THIS LINK IS CORRECT */}
-    <a href="/stories" className="hover:text-orange-400">Kwentong Bundok</a> 
-    <a href="/portal" className="bg-orange-500 px-3 py-2 rounded">Guide Portal</a>
-  </div>
-</nav>
+      <nav className="sticky top-0 bg-emerald-900 text-white p-4 flex justify-between items-center z-50 shadow-md">
+        <h1 className="font-black text-xl tracking-tighter uppercase italic">Akyat Tiwala</h1>
+        <div className="space-x-4 text-xs font-bold uppercase">
+          <a href="/" className="hover:text-orange-400">Plan</a>
+          <a href="/stories" className="hover:text-orange-400">Kwentong Bundok</a> 
+          <a href="/portal" className="bg-orange-500 px-3 py-2 rounded">Guide Portal</a>
+        </div>
+      </nav>
 
       {/* HERO SECTION */}
       <header className="bg-emerald-800 text-white py-16 px-6 text-center">
@@ -78,40 +108,22 @@ export default function Home() {
       <section id="plan" className="py-12 px-4 max-w-3xl mx-auto">
         <h3 className="text-3xl font-black text-center mb-8 text-emerald-900 uppercase">Plan Your Hike</h3>
         
-        {/* STEP 1: SELECT MOUNTAIN (Grid Layout for more options) */}
+        {/* STEP 1: SELECT MOUNTAIN */}
         <div className="mb-10">
           <p className="font-bold mb-4 uppercase text-xs text-slate-500 text-center tracking-widest italic">Step 1: Choose your destination</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button 
-              onClick={() => setSelectedMountain('batulao')}
-              className={`p-4 rounded-xl font-bold border-2 transition ${selectedMountain === 'batulao' ? 'bg-emerald-900 text-white border-emerald-900 shadow-lg' : 'bg-white border-slate-200'}`}
-            >
-              Mt. Batulao
-            </button>
-            <button 
-              onClick={() => setSelectedMountain('trilogy')}
-              className={`p-4 rounded-xl font-bold border-2 transition ${selectedMountain === 'trilogy' ? 'bg-emerald-900 text-white border-emerald-900 shadow-lg' : 'bg-white border-slate-200'}`}
-            >
-              Nasugbu Trilogy (All 3)
-            </button>
-            <button 
-              onClick={() => setSelectedMountain('talamitam')}
-              className={`p-4 rounded-xl font-bold border-2 transition ${selectedMountain === 'talamitam' ? 'bg-emerald-900 text-white border-emerald-900 shadow-lg' : 'bg-white border-slate-200'}`}
-            >
-              Mt. Talamitam Only
-            </button>
-            <button 
-              onClick={() => setSelectedMountain('apayang')}
-              className={`p-4 rounded-xl font-bold border-2 transition ${selectedMountain === 'apayang' ? 'bg-emerald-900 text-white border-emerald-900 shadow-lg' : 'bg-white border-slate-200'}`}
-            >
-              Mt. Apayang Only
-            </button>
-            <button 
-              onClick={() => setSelectedMountain('lantik')}
-              className={`p-4 rounded-xl font-bold border-2 transition ${selectedMountain === 'lantik' ? 'bg-emerald-900 text-white border-emerald-900 shadow-lg' : 'bg-white border-slate-200'}`}
-            >
-              Mt. Lantik Only
-            </button>
+            {Object.keys(mountains).map((id) => (
+               <button 
+               key={id}
+               onClick={() => {
+                 setSelectedMountain(id);
+                 setGuides([]); // Hide old guides when changing mountains
+               }}
+               className={`p-4 rounded-xl font-bold border-2 transition ${selectedMountain === id ? 'bg-emerald-900 text-white border-emerald-900 shadow-lg' : 'bg-white border-slate-200'}`}
+             >
+               {mountains[id].name}
+             </button>
+            ))}
           </div>
         </div>
 
@@ -122,7 +134,7 @@ export default function Home() {
               <h4 className="text-3xl font-black text-emerald-900 mb-2 underline decoration-orange-400 underline-offset-8">
                 {currentMount.name}
               </h4>
-              <p className="text-slate-600 mb-6 font-medium leading-relaxed italic mt-4">"{currentMount.desc}"</p>
+              <p className="text-slate-600 mb-6 font-medium leading-relaxed italic mt-4">&quot;{currentMount.desc}&quot;</p>
               
               <div className="flex gap-4 mb-8">
                 <div className="flex-1 bg-emerald-50 p-4 rounded-2xl text-center">
@@ -137,39 +149,68 @@ export default function Home() {
 
               {/* BUDGET CALCULATOR */}
               <div className="border-t border-slate-100 pt-6">
-                <p className="font-black text-[10px] uppercase text-slate-400 mb-4 tracking-tighter">Budget Estimator (DIY Sharing)</p>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-bold">Group Size (Pax):</label>
-                  <span className="bg-orange-100 text-orange-600 font-black px-3 py-1 rounded-full text-lg">{pax}</span>
+                <p className="font-black text-[10px] uppercase text-slate-400 mb-4 tracking-tighter text-center">Budget Estimator (DIY Sharing)</p>
+                <div className="flex justify-between items-center mb-2 px-2">
+                  <label className="text-sm font-bold uppercase text-slate-600">Ilang kayo? (Pax):</label>
+                  <span className="bg-orange-500 text-white font-black px-4 py-1 rounded-full text-lg">{pax}</span>
                 </div>
                 <input 
                   type="range" min="1" max="10" value={pax} 
-                  onChange={(e) => setPax(e.target.value)}
+                  onChange={(e) => setPax(parseInt(e.target.value))}
                   className="w-full h-3 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-orange-500 mb-8"
                 />
                 
-                <div className="flex justify-between items-center p-6 bg-slate-900 text-white rounded-2xl shadow-inner">
+                <div className="flex justify-between items-center p-6 bg-slate-900 text-white rounded-2xl shadow-inner mb-6">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Total Group Cost</span>
-                    <p className="text-3xl font-black">₱{totalCost}</p>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 leading-none">Total for the group</span>
+                    <p className="text-3xl font-black tracking-tight">₱{totalCost}</p>
                   </div>
                   <div className="text-right border-l border-slate-700 pl-6">
-                    <span className="text-[10px] uppercase font-bold text-orange-400 italic leading-none">Your Share</span>
-                    <p className="text-2xl font-black">₱{(totalCost / pax).toFixed(0)}</p>
+                    <span className="text-[10px] uppercase font-bold text-orange-400 italic leading-none">Per head share</span>
+                    <p className="text-2xl font-black tracking-tight">₱{(totalCost / pax).toFixed(0)}</p>
                   </div>
                 </div>
-              </div>
 
-              <button className="w-full mt-8 bg-orange-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:bg-orange-600 transition uppercase italic">
-                ⛰️ Pick Your Kuya!
-              </button>
+                <button 
+                  onClick={findKuyas}
+                  disabled={loading}
+                  className="w-full bg-orange-500 text-white font-black py-5 rounded-2xl text-xl shadow-lg hover:bg-orange-600 transition uppercase italic tracking-wider active:scale-95"
+                >
+                  {loading ? 'Finding Local Guides...' : '⛰️ Pick Your Kuya!'}
+                </button>
+              </div>
             </div>
+
+            {/* STEP 3: GUIDE LIST RESULTS */}
+            {guides.length > 0 && (
+                <div id="kuya-section" className="mt-12 space-y-4 animate-in slide-in-from-bottom-8 duration-700">
+                    <h5 className="text-center font-black uppercase italic text-emerald-900 text-xl">Verified Kuyas of {currentMount.name}</h5>
+                    <div className="grid grid-cols-1 gap-4">
+                        {guides.map((kuya) => (
+                            <div key={kuya.id} className="bg-white border border-slate-200 p-6 rounded-3xl shadow-md flex flex-col md:flex-row justify-between items-center gap-6">
+                                <div className="text-center md:text-left flex-1">
+                                    <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
+                                        <h6 className="text-2xl font-black text-emerald-950 uppercase italic tracking-tighter">{kuya.nickname}</h6>
+                                        {kuya.is_verified && <span className="bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-0.5 rounded">Verified ✅</span>}
+                                    </div>
+                                    <p className="text-xs font-bold text-emerald-700 mb-3 tracking-widest uppercase">Expert in: {kuya.mountains_covered?.join(" • ")}</p>
+                                    <p className="text-sm text-slate-500 font-medium italic ">&quot;{kuya.bio}&quot;</p>
+                                </div>
+                                <div className="flex flex-col w-full md:w-48 gap-2">
+                                    <a href={`https://m.me/${kuya.messenger_url}`} target="_blank" className="bg-blue-600 text-white text-center py-3 rounded-xl font-black text-[10px] uppercase shadow-lg hover:bg-blue-700">Messenger</a>
+                                    <a href={`tel:${kuya.phone}`} className="bg-slate-900 text-white text-center py-3 rounded-xl font-black text-[10px] uppercase hover:bg-black tracking-tighter">Call {kuya.phone}</a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
           </div>
         )}
       </section>
 
-      <footer className="py-12 bg-emerald-950 text-emerald-700 text-center text-xs font-bold uppercase tracking-widest">
-        AKYAT TIWALA © 2025 | Nasugbu DIY Hiking Platform
+      <footer className="py-12 bg-emerald-950 text-emerald-700 text-center text-xs font-bold uppercase tracking-widest mt-10">
+        AKYAT TIWALA © 2025 | Para sa Nasugbu Locals
       </footer>
     </div>
   );
