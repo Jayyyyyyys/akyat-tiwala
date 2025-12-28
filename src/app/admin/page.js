@@ -9,7 +9,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
 
   // YOUR SECRET KEY - Change this!
-  const SECRET_KEY = "AkyatAdmin2025";
+  const SECRET_KEY = "Jacob@@123";
 
   useEffect(() => {
     if (isAuthorized) fetchAllGuides();
